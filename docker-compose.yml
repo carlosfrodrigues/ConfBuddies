@@ -4,12 +4,26 @@ services:
     depends_on:
       - chrome
       - db
+      - webpacker
     env_file:
       - config/docker.env
     ports:
       - "3000:3000"
     volumes:
       - "./:/app/"
+
+  webpacker:
+    build: .
+    environment:
+      - NODE_ENV=development
+      - RAILS_ENV=development
+      - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
+    command: ./bin/webpack-dev-server
+    volumes:
+      - ./:/app/
+    ports:
+      - "3035:3035"
+
   db:
     image: postgres:13
     env_file:

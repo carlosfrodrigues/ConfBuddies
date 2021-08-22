@@ -12,6 +12,7 @@ COPY Gemfile Gemfile.lock /app/
 WORKDIR /app/
 
 RUN bundle install
+RUN yarn install
 
 ENTRYPOINT ["./scripts/remove_server_pid.sh"]
 CMD bundle exec rails server -b 0.0.0.0 -p 3000
