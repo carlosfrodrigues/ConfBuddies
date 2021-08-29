@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Used for Feature Specs
 RSpec.shared_examples "unauthenticated user does not have access" do
   before(:each) do
     sign_in user if user
@@ -23,15 +24,34 @@ RSpec.shared_examples "unauthenticated user does not have access" do
   end
 end
 
+# Used for Request Specs
+# Devise prevented access
 RSpec.shared_examples "redirect to sign in" do
-  it "redirect to sign in" do
+  it "redirects to sign in" do
     subject
     expect(response).to redirect_to new_user_session_path
   end
 end
 
+# Used for Request Specs
+# Devise prevented access
+RSpec.shared_examples "unauthenticated access in json" do
+  it "redirects to user sign in" do
+    subject
+    error = JSON.parse(response.body)["error"]
+    expect(error).to eq "You need to sign in or sign up before continuing."
+  end
+
+  it "returns a 401 unauthorized" do
+    subject
+    expect(response).to have_http_status(401)
+  end
+end
+
+# Used for Request Specs
+# Pundit prevented access
 RSpec.shared_examples "unauthorized access" do
-  it "redirect to root" do
+  it "redirects to root" do
     subject
     expect(response).to redirect_to root_path
   end
